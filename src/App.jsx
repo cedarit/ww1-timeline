@@ -993,8 +993,8 @@ function StopCascade() {
 
           <div style={{ display: "flex", gap: 8, marginTop: 14 }}>
             <button
-              onClick={() => setPlaying(true)}
-              disabled={playing || step >= events.length}
+              onClick={() => setPlaying((v) => !v)}
+              disabled={step >= events.length}
               style={{
                 flex: 1,
                 padding: "10px",
@@ -1003,7 +1003,7 @@ function StopCascade() {
                 border: "none",
                 fontFamily: "Georgia, serif",
                 fontSize: 13,
-                cursor: playing || step >= events.length ? "default" : "pointer",
+                cursor: step >= events.length ? "default" : "pointer",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -1011,7 +1011,7 @@ function StopCascade() {
                 letterSpacing: "0.1em",
               }}
             >
-              {step >= events.length ? "DONE" : playing ? <><Pause size={12} /> PLAYING</> : <><Play size={12} /> PLAY CASCADE</>}
+              {step >= events.length ? "DONE" : playing ? <><Pause size={12} /> PAUSE</> : <><Play size={12} /> PLAY CASCADE</>}
             </button>
             <button
               onClick={reset}
