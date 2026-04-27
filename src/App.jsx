@@ -62,6 +62,7 @@ export default function App() {
       subtitle: "A continent of pride, rivalry, and hidden fault lines",
       script: "Begin here. Set the scene: Europe in 1900 is the centre of the world. Six big powers, each convinced of its own greatness. Ask the class: 'What happens when six proud neighbours all want more?' That tension is our story.",
       exam: "Nationalism = sense of unity through common history, language, culture. Imperialism = a powerful nation establishing control over another country.",
+      pdfPage: 1,
       Component: StopEurope1900,
     },
     {
@@ -71,6 +72,7 @@ export default function App() {
       subtitle: "Pride curdles into grievance",
       script: "Three countries, three grudges. France wants Alsace-Lorraine back from Germany. Italy wants Trentino and Trieste from Austria. Serbia wants all Slavs in one state. Make students notice: every grievance points toward Germany or Austria.",
       exam: "Three textbook examples: France→Alsace-Lorraine, Italy→Trentino & Trieste, Serbia→Greater Slav State. Each fuelled the road to war.",
+      pdfPage: 1,
       Component: StopGrievances,
     },
     {
@@ -80,6 +82,7 @@ export default function App() {
       subtitle: "Britain and France first, Germany arrives late",
       script: "Imperialism in one image: the world's map fills up with British and French colours. Then Germany shows up — and there's nothing left. That latecomer's frustration is the engine of envy.",
       exam: "Colonies provided raw materials, cheap labour, markets, and prestige. Britain's empire was protected by the world's largest navy.",
+      pdfPage: 2,
       Component: StopColonies,
     },
     {
@@ -89,6 +92,7 @@ export default function App() {
       subtitle: "Self-defence becomes self-fulfilling prophecy",
       script: "The Franco-Prussian War of 1870 starts the clock. Every country stockpiles 'for self-defence' — but if your neighbour arms, you must arm too. By 1914, Europe is a powder keg with everyone holding a match.",
       exam: "Trigger date: Franco-Prussian War, 1870. Germany built a powerful navy to rival Britain. Kiel Canal deepened for battleships. Imperator (1912) — largest ship in the world.",
+      pdfPage: 2,
       Component: StopArmsRace,
     },
     {
@@ -98,6 +102,7 @@ export default function App() {
       subtitle: "Two webs across one continent",
       script: "Watch carefully. Triple Alliance forms in 1882: Germany, Austria-Hungary, Italy. Then France, Russia, and Britain answer with the Triple Entente in 1907. Europe is now divided into two armed camps. Any spark, anywhere, will pull both sides in.",
       exam: "Triple Alliance (1882): Germany + Austria-Hungary + Italy. Triple Entente (1907): France + Russia + Britain. Japan later joined the Entente. Italy switched sides in 1915.",
+      pdfPage: 3,
       Component: StopAlliances,
     },
     {
@@ -107,6 +112,7 @@ export default function App() {
       subtitle: "One bullet, two deaths, a continent on fire",
       script: "June 28, 1914. Sarajevo, capital of Bosnia. Archduke Franz Ferdinand — heir to the Austrian throne — is shot by a Serbian nationalist linked to the Black Hand. Pause here. Ask: 'Should one murder cause a world war?' The answer comes next.",
       exam: "Date: June 28, 1914. Place: Sarajevo, Bosnia. Victim: Archduke Francis Ferdinand. Organisation: Black Hand (Union of Death) — extremist Serbian nationalists.",
+      pdfPage: 3,
       Component: StopSarajevo,
     },
     {
@@ -116,6 +122,7 @@ export default function App() {
       subtitle: "Seven days. Six declarations. One world war.",
       script: "This is the moment. Press play and watch: Austria→Serbia, Russia mobilises, Germany→Russia, Germany→France, Germany invades Belgium, Britain→Germany. Six declarations in seven days — because the alliance webs we built earlier left no off-ramp.",
       exam: "Sequence: Jul 23 ultimatum → Jul 28 Austria declares war on Serbia → Aug 1 Germany on Russia → Aug 3 Germany on France → Aug 4 Germany invades Belgium → Aug 4 Britain on Germany.",
+      pdfPage: 3,
       Component: StopCascade,
     },
     {
@@ -134,6 +141,7 @@ export default function App() {
       subtitle: "Germany fights east and west at once",
       script: "Germany's nightmare: war on two fronts. In the West, they sweep through Belgium toward Paris — stopped at the Battle of the Marne, 15 miles short. In the East, Russia attacks. The 'short war' everyone expected is already gone.",
       exam: "Battle of the Marne — turning point of the war. Foiled German plans to crush France quickly. Eastern Front opened August 1914 with Austria-Hungary's invasion of Russia.",
+      pdfPage: 4,
       Component: StopFronts,
     },
     {
@@ -143,6 +151,7 @@ export default function App() {
       subtitle: "Total war, total misery",
       script: "Click each part of the trench. This is what 'total war' meant on the ground: machine guns above, mud below, lice and rats in between. Earlier wars spared civilians. This one didn't spare anyone.",
       exam: "Trench warfare emerged because machine guns + heavy artillery made above-ground movement suicidal. Conditions: food shortages, lice, rats, poison gas, mud. Marks WW1 as 'total war'.",
+      pdfPage: 4,
       Component: StopTrenches,
     },
     {
@@ -152,6 +161,7 @@ export default function App() {
       subtitle: "The war's hinge year",
       script: "1917 changes everything. April: USA joins the Allies, angered by U-boats sinking the Lusitania (1,153 dead, 128 American). October: Bolshevik Revolution in Russia. By March 1918, Russia signs the Treaty of Brest-Litovsk and walks out. Fresh American troops replace exhausted Russian ones.",
       exam: "USA enters: 6 April 1917. Trigger: Lusitania (1915) + fear of German victory threatening US loans. Russia exits: October Revolution → Treaty of Brest-Litovsk, March 1918.",
+      pdfPage: 4,
       Component: StopUSARussia,
     },
     {
@@ -161,6 +171,7 @@ export default function App() {
       subtitle: "Eleven clauses to crush a nation",
       script: "Signed exactly five years after Sarajevo. Click each clause. Every one is designed to ensure Germany never wars again. But ask the class — does humiliation bring peace, or breed the next war? Hint: 1939.",
       exam: "Date: 28 June 1919. Decided by the 'Big Three': Wilson (USA), Lloyd George (UK), Clemenceau (France). Based on Wilson's Fourteen Points. Reparations: $33 billion. Army capped at 100,000.",
+      pdfPage: 5,
       Component: StopVersailles,
     },
     {
@@ -170,6 +181,7 @@ export default function App() {
       subtitle: "Three empires fall, new nations rise",
       script: "Final stop. Three dynasties gone — Romanov, Hohenzollern, Hapsburg. New nations appear: Czechoslovakia, Yugoslavia, Poland, Finland, Latvia, Lithuania, Estonia. The League of Nations forms in 1920 to prevent another war. Ask: 'Why did it fail?' Cliffhanger to WW2.",
       exam: "Dynasties destroyed: Romanov (Russia), Hohenzollern (Germany), Hapsburg (Austria-Hungary). New states: Czechoslovakia, Yugoslavia, Finland, Estonia, Latvia, Lithuania. League of Nations: 1920. USA never joined; failed to prevent WW2.",
+      pdfPage: 6,
       Component: StopAftermath,
     },
   ];
@@ -222,6 +234,16 @@ export default function App() {
         <div style={styles.stopNumber}>STOP {String(current.id).padStart(2, "0")} / {stops.length}</div>
         <h2 style={styles.stopTitle}>{current.title}</h2>
         <div style={styles.stopSubtitle}>{current.subtitle}</div>
+        {current.pdfPage && (
+          <a
+            href={`/ww1-icse.pdf#page=${current.pdfPage}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            style={styles.readMore}
+          >
+            Read More ↗
+          </a>
+        )}
       </div>
 
       {/* Main stage */}
@@ -1753,6 +1775,18 @@ const styles = {
     fontSize: 16,
     fontStyle: "italic",
     color: "var(--t-muted)",
+  },
+  readMore: {
+    display: "inline-block",
+    marginTop: 8,
+    fontFamily: "var(--t-font)",
+    fontSize: 12,
+    fontWeight: 700,
+    letterSpacing: "0.12em",
+    color: "var(--t-danger)",
+    textDecoration: "none",
+    borderBottom: "1px solid var(--t-danger)",
+    paddingBottom: 1,
   },
   stage: {
     flex: 1,
