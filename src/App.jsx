@@ -1,10 +1,58 @@
 import React, { useState, useEffect, useRef } from "react";
-import { ChevronLeft, ChevronRight, BookOpen, X, Play, Pause, RotateCcw } from "lucide-react";
+import { ChevronLeft, ChevronRight, BookOpen, X, Play, Pause, RotateCcw, Palette } from "lucide-react";
+
+const THEMES = {
+  antique: {
+    name: "Antique Parchment",
+    preview: ["#e8d9b4", "#f4ead5", "#c89858", "#8b1a1a"],
+    vars: {
+      "--t-bg": "#e8d9b4",
+      "--t-surface": "#f4ead5",
+      "--t-dark": "#3a2a1a",
+      "--t-accent": "#c89858",
+      "--t-danger": "#8b1a1a",
+      "--t-text": "#3a2a1a",
+      "--t-text-light": "#f4ead5",
+      "--t-muted": "#5a3e1f",
+      "--t-exam-bg": "#fffbe8",
+      "--t-overlay": "rgba(58,42,26,0.85)",
+      "--t-on-accent": "#3a2a1a",
+      "--t-nav-border": "4px double #c89858",
+      "--t-font": "'Crimson Text', Georgia, serif",
+      "--t-heading-font": "'Playfair Display', Georgia, serif",
+      "--t-accent-glow": "none",
+    },
+  },
+  genz: {
+    name: "Gen Z Neon",
+    preview: ["#0d0d1a", "#1a1a2e", "#00d4ff", "#ff2d78"],
+    vars: {
+      "--t-bg": "#0d0d1a",
+      "--t-surface": "#1a1a2e",
+      "--t-dark": "#06060f",
+      "--t-accent": "#00d4ff",
+      "--t-danger": "#ff2d78",
+      "--t-text": "#e8e8ff",
+      "--t-text-light": "#e8e8ff",
+      "--t-muted": "#8888bb",
+      "--t-exam-bg": "#1a0a2e",
+      "--t-overlay": "rgba(6,6,15,0.92)",
+      "--t-on-accent": "#06060f",
+      "--t-nav-border": "4px solid #00d4ff",
+      "--t-font": "'Space Grotesk', 'Inter', system-ui, sans-serif",
+      "--t-heading-font": "'Space Grotesk', 'Inter', system-ui, sans-serif",
+      "--t-accent-glow": "0 0 20px rgba(0,212,255,0.35)",
+    },
+  },
+};
 
 export default function App() {
   const [stop, setStop] = useState(0);
   const [showScript, setShowScript] = useState(false);
   const [showExam, setShowExam] = useState(true);
+  const [themeKey, setThemeKey] = useState("antique");
+  const [showThemePicker, setShowThemePicker] = useState(false);
+  const currentTheme = THEMES[themeKey];
 
   const stops = [
     {
@@ -134,7 +182,7 @@ export default function App() {
 
   return (
     <div style={styles.app}>
-      <style>{globalCSS}</style>
+      <style>{makeGlobalCSS(currentTheme.vars)}</style>
 
       {/* Masthead */}
       <header style={styles.masthead}>
@@ -149,6 +197,13 @@ export default function App() {
               <div style={styles.yearLabel}>YEAR</div>
               <div style={styles.yearValue}>{current.year}</div>
             </div>
+            <button
+              onClick={() => setShowThemePicker((v) => !v)}
+              style={styles.themeButton}
+              title="Change theme"
+            >
+              <Palette size={14} /> THEME
+            </button>
           </div>
         </div>
       </header>
@@ -231,6 +286,31 @@ export default function App() {
           <ChevronRight size={20} />
         </button>
       </nav>
+
+      {/* Theme Picker */}
+      {showThemePicker && (
+        <>
+          <div style={styles.themePickerBackdrop} onClick={() => setShowThemePicker(false)} />
+          <div style={styles.themePicker}>
+            <div style={styles.themePickerTitle}>CHOOSE THEME</div>
+            {Object.entries(THEMES).map(([key, theme]) => (
+              <button
+                key={key}
+                onClick={() => { setThemeKey(key); setShowThemePicker(false); }}
+                style={{ ...styles.themeCard, ...(themeKey === key ? styles.themeCardActive : {}) }}
+              >
+                <div style={styles.themeSwatches}>
+                  {theme.preview.map((color, i) => (
+                    <div key={i} style={{ ...styles.themeSwatch, background: color }} />
+                  ))}
+                </div>
+                <span style={styles.themeCardName}>{theme.name}</span>
+                {themeKey === key && <span style={styles.themeCheck}>✓</span>}
+              </button>
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 }
@@ -1394,8 +1474,14 @@ function StopAftermath() {
    STYLES
    ============================================================ */
 
-const globalCSS = `
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&display=swap');
+const makeGlobalCSS = (themeVars) => {
+  const varBlock = Object.entries(themeVars).map(([k, v]) => `  ${k}: ${v};`).join("\n");
+  return `
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=Space+Grotesk:wght@400;600;700;800&display=swap');
+
+:root {
+${varBlock}
+}
 
 @keyframes fadein {
   from { opacity: 0; transform: translateY(8px); }
@@ -1415,22 +1501,23 @@ const globalCSS = `
   to { stroke-dasharray: 1000; stroke-dashoffset: 0; }
 }
 `;
+};
 
 const styles = {
   app: {
     minHeight: "100vh",
-    background: "#e8d9b4",
-    fontFamily: "'Crimson Text', Georgia, serif",
-    color: "#3a2a1a",
+    background: "var(--t-bg)",
+    fontFamily: "var(--t-font)",
+    color: "var(--t-text)",
     display: "flex",
     flexDirection: "column",
     position: "relative",
   },
   masthead: {
-    background: "#3a2a1a",
-    color: "#f4ead5",
+    background: "var(--t-dark)",
+    color: "var(--t-text-light)",
     padding: "20px 32px",
-    borderBottom: "4px double #c89858",
+    borderBottom: "var(--t-nav-border)",
   },
   mastheadInner: {
     display: "flex",
@@ -1441,13 +1528,13 @@ const styles = {
   },
   mastheadLeft: {},
   eyebrow: {
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 12,
     letterSpacing: "0.3em",
-    color: "#c89858",
+    color: "var(--t-accent)",
   },
   mastheadTitle: {
-    fontFamily: "'Playfair Display', Georgia, serif",
+    fontFamily: "var(--t-heading-font)",
     fontSize: 48,
     fontWeight: 900,
     letterSpacing: "0.02em",
@@ -1455,59 +1542,63 @@ const styles = {
     lineHeight: 1,
   },
   mastheadSub: {
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 14,
     fontStyle: "italic",
-    color: "#c89858",
+    color: "var(--t-accent)",
   },
-  mastheadRight: {},
+  mastheadRight: {
+    display: "flex",
+    alignItems: "center",
+    gap: 12,
+  },
   yearBadge: {
-    border: "2px solid #c89858",
+    border: "2px solid var(--t-accent)",
     padding: "8px 18px",
     textAlign: "center",
   },
   yearLabel: {
     fontSize: 10,
     letterSpacing: "0.3em",
-    color: "#c89858",
+    color: "var(--t-accent)",
   },
   yearValue: {
-    fontFamily: "'Playfair Display', Georgia, serif",
+    fontFamily: "var(--t-heading-font)",
     fontSize: 22,
     fontWeight: 700,
-    color: "#f4ead5",
+    color: "var(--t-text-light)",
     marginTop: 2,
   },
   stopHeader: {
-    background: "#f4ead5",
+    background: "var(--t-surface)",
     padding: "20px 32px 16px",
-    borderBottom: "1px solid #c89858",
+    borderBottom: "1px solid var(--t-accent)",
     textAlign: "center",
   },
   stopNumber: {
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 11,
     letterSpacing: "0.3em",
-    color: "#8b1a1a",
+    color: "var(--t-danger)",
     fontWeight: 600,
   },
   stopTitle: {
-    fontFamily: "'Playfair Display', Georgia, serif",
+    fontFamily: "var(--t-heading-font)",
     fontSize: 36,
     fontWeight: 700,
-    color: "#3a2a1a",
+    color: "var(--t-text)",
     margin: "4px 0 2px",
     lineHeight: 1.1,
   },
   stopSubtitle: {
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 16,
     fontStyle: "italic",
-    color: "#5a3e1f",
+    color: "var(--t-muted)",
   },
   stage: {
     flex: 1,
-    background: "#f4ead5",
+    background: "var(--t-surface)",
     minHeight: 480,
     display: "flex",
     flexDirection: "column",
@@ -1519,21 +1610,21 @@ const styles = {
     top: 130,
     right: 24,
     width: 280,
-    background: "#fffbe8",
-    border: "2px solid #8b1a1a",
-    boxShadow: "4px 4px 0 #3a2a1a",
+    background: "var(--t-exam-bg)",
+    border: "2px solid var(--t-danger)",
+    boxShadow: "4px 4px 0 var(--t-dark)",
     padding: "10px 14px 12px",
     zIndex: 50,
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
   },
   examNoteHeader: {
     display: "flex",
     alignItems: "center",
     gap: 6,
     fontSize: 11,
-    color: "#8b1a1a",
+    color: "var(--t-danger)",
     fontWeight: 700,
-    borderBottom: "1px solid #8b1a1a",
+    borderBottom: "1px solid var(--t-danger)",
     paddingBottom: 6,
     marginBottom: 8,
   },
@@ -1541,36 +1632,36 @@ const styles = {
     marginLeft: "auto",
     background: "none",
     border: "none",
-    color: "#8b1a1a",
+    color: "var(--t-danger)",
     cursor: "pointer",
     padding: 2,
   },
   examBody: {
     fontSize: 13,
-    color: "#3a2a1a",
+    color: "var(--t-text)",
     lineHeight: 1.5,
   },
   examOpenButton: {
     position: "fixed",
     top: 130,
     right: 24,
-    background: "#8b1a1a",
-    color: "#f4ead5",
+    background: "var(--t-danger)",
+    color: "var(--t-text-light)",
     border: "none",
     padding: "8px 12px",
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 12,
     cursor: "pointer",
     display: "flex",
     alignItems: "center",
     gap: 6,
-    boxShadow: "3px 3px 0 #3a2a1a",
+    boxShadow: "3px 3px 0 var(--t-dark)",
     zIndex: 50,
   },
   scriptOverlay: {
     position: "fixed",
     inset: 0,
-    background: "rgba(58, 42, 26, 0.85)",
+    background: "var(--t-overlay)",
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -1578,70 +1669,70 @@ const styles = {
     padding: 20,
   },
   scriptCard: {
-    background: "#f4ead5",
-    border: "3px solid #3a2a1a",
-    boxShadow: "8px 8px 0 #8b1a1a",
+    background: "var(--t-surface)",
+    border: "3px solid var(--t-dark)",
+    boxShadow: "8px 8px 0 var(--t-danger)",
     padding: 30,
     maxWidth: 600,
     width: "100%",
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
   },
   scriptHeader: {
     display: "flex",
     justifyContent: "space-between",
     alignItems: "center",
-    borderBottom: "2px solid #3a2a1a",
+    borderBottom: "2px solid var(--t-accent)",
     paddingBottom: 10,
     marginBottom: 16,
   },
   scriptLabel: {
     fontSize: 12,
     letterSpacing: "0.3em",
-    color: "#8b1a1a",
+    color: "var(--t-danger)",
     fontWeight: 700,
   },
   scriptClose: {
     background: "none",
     border: "none",
     cursor: "pointer",
-    color: "#3a2a1a",
+    color: "var(--t-text)",
   },
   scriptBody: {
     fontSize: 17,
     lineHeight: 1.6,
-    color: "#3a2a1a",
+    color: "var(--t-text)",
   },
   nav: {
-    background: "#3a2a1a",
+    background: "var(--t-dark)",
     padding: "16px 32px",
     display: "flex",
     alignItems: "center",
     gap: 16,
-    borderTop: "4px double #c89858",
+    borderTop: "var(--t-nav-border)",
   },
   navButton: {
     background: "transparent",
     border: "none",
     cursor: "pointer",
-    color: "#c89858",
+    color: "var(--t-accent)",
     padding: 8,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
   },
   navArrow: {
-    background: "#c89858",
-    color: "#3a2a1a",
+    background: "var(--t-accent)",
+    color: "var(--t-on-accent)",
     width: 44,
     height: 44,
     borderRadius: "50%",
   },
   scriptButton: {
-    background: "#8b1a1a",
-    color: "#f4ead5",
+    background: "var(--t-danger)",
+    color: "var(--t-text-light)",
     border: "none",
     padding: "10px 16px",
-    fontFamily: "'Crimson Text', Georgia, serif",
+    fontFamily: "var(--t-font)",
     fontSize: 13,
     letterSpacing: "0.1em",
     cursor: "pointer",
@@ -1659,7 +1750,7 @@ const styles = {
     width: 14,
     height: 14,
     borderRadius: "50%",
-    border: "2px solid #c89858",
+    border: "2px solid var(--t-accent)",
     background: "transparent",
     cursor: "pointer",
     padding: 0,
@@ -1669,18 +1760,94 @@ const styles = {
     transition: "all 0.2s",
   },
   dotActive: {
-    background: "#c89858",
+    background: "var(--t-accent)",
     transform: "scale(1.3)",
   },
   dotPast: {
-    background: "#8b1a1a",
-    border: "2px solid #8b1a1a",
+    background: "var(--t-danger)",
+    border: "2px solid var(--t-danger)",
   },
   dotInner: {
     width: 4,
     height: 4,
     borderRadius: "50%",
-    background: "#3a2a1a",
+    background: "var(--t-on-accent)",
+  },
+  themeButton: {
+    background: "none",
+    border: "1px solid var(--t-accent)",
+    color: "var(--t-accent)",
+    cursor: "pointer",
+    padding: "6px 10px",
+    display: "flex",
+    alignItems: "center",
+    gap: 6,
+    fontFamily: "var(--t-font)",
+    fontSize: 11,
+    letterSpacing: "0.15em",
+    fontWeight: 700,
+  },
+  themePickerBackdrop: {
+    position: "fixed",
+    inset: 0,
+    zIndex: 200,
+  },
+  themePicker: {
+    position: "fixed",
+    top: 90,
+    right: 24,
+    background: "var(--t-dark)",
+    border: "2px solid var(--t-accent)",
+    boxShadow: "var(--t-accent-glow)",
+    padding: 16,
+    zIndex: 201,
+    minWidth: 230,
+  },
+  themePickerTitle: {
+    color: "var(--t-accent)",
+    fontFamily: "var(--t-font)",
+    fontSize: 11,
+    letterSpacing: "0.25em",
+    marginBottom: 12,
+    fontWeight: 700,
+  },
+  themeCard: {
+    display: "flex",
+    alignItems: "center",
+    gap: 10,
+    width: "100%",
+    background: "none",
+    border: "1px solid transparent",
+    padding: "8px 10px",
+    cursor: "pointer",
+    color: "var(--t-text-light)",
+    fontFamily: "var(--t-font)",
+    textAlign: "left",
+    marginBottom: 4,
+  },
+  themeCardActive: {
+    border: "1px solid var(--t-accent)",
+    background: "rgba(255,255,255,0.06)",
+  },
+  themeSwatches: {
+    display: "flex",
+    gap: 4,
+  },
+  themeSwatch: {
+    width: 13,
+    height: 13,
+    borderRadius: "50%",
+    border: "1px solid rgba(255,255,255,0.2)",
+    flexShrink: 0,
+  },
+  themeCardName: {
+    flex: 1,
+    fontSize: 13,
+  },
+  themeCheck: {
+    color: "var(--t-accent)",
+    fontWeight: 700,
+    fontSize: 14,
   },
 };
 
