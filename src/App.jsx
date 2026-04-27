@@ -176,6 +176,15 @@ export default function App() {
     },
     {
       id: 13,
+      year: "1919",
+      title: "Quick Check",
+      subtitle: "Two questions on the Treaty of Versailles",
+      script: "Two focused questions on the Treaty. Ask students to answer before revealing. Key exam targets: the Big Three and the reparations figure.",
+      exam: "Big Three: Wilson (USA), Lloyd George (UK), Clemenceau (France). Reparations: $33 billion. Date: June 28, 1919.",
+      Component: StopVersaillesQuiz,
+    },
+    {
+      id: 14,
       year: "1919–1920",
       title: "A Map Redrawn, A League Born",
       subtitle: "Three empires fall, new nations rise",
@@ -1545,6 +1554,101 @@ function StopVersailles() {
         >
           {active ? terms.find((t) => t.id === active).text : "Click any article to read its terms. All eleven were designed to ensure Germany never wars again."}
         </div>
+      </div>
+    </div>
+  );
+}
+
+function StopVersaillesQuiz() {
+  const questions = [
+    {
+      q: "Who were the 'Big Three' who decided the terms of the Treaty of Versailles?",
+      options: ["Kaiser Wilhelm, Franz Josef, Nicholas II", "Wilson, Lloyd George, Clemenceau", "Churchill, Roosevelt, Stalin", "Bismarck, Cavour, Garibaldi"],
+      answer: 1,
+      explain: "Woodrow Wilson (USA), Lloyd George (UK), and Clemenceau (France) — the defeated powers had no say.",
+    },
+    {
+      q: "How much did Germany have to pay in war reparations under the Treaty of Versailles?",
+      options: ["$10 billion", "$20 billion", "$33 billion", "$50 billion"],
+      answer: 2,
+      explain: "$33 billion — a crippling sum that caused economic collapse and fuelled resentment leading to WW2.",
+    },
+  ];
+
+  const [selected, setSelected] = useState(Array(questions.length).fill(null));
+  const [submitted, setSubmitted] = useState(false);
+
+  const allAnswered = selected.every((s) => s !== null);
+  const score = submitted ? selected.filter((s, i) => s === questions[i].answer).length : 0;
+
+  const pick = (qi, oi) => {
+    if (submitted) return;
+    setSelected((prev) => prev.map((v, i) => (i === qi ? oi : v)));
+  };
+
+  const reset = () => {
+    setSelected(Array(questions.length).fill(null));
+    setSubmitted(false);
+  };
+
+  const scoreColor = score === questions.length ? "#1e5e3e" : score === 1 ? "#a16207" : "#8b1a1a";
+
+  return (
+    <div style={{ ...stageStyles.wrap, overflowY: "auto" }}>
+      <div style={{ maxWidth: 740, margin: "0 auto", padding: "28px 20px", width: "100%" }}>
+        <div style={{ fontFamily: "var(--t-font)", fontSize: 11, letterSpacing: "0.25em", color: "var(--t-accent)", fontWeight: 700, marginBottom: 24 }}>
+          CHECKPOINT · TREATY OF VERSAILLES
+        </div>
+
+        {questions.map((q, qi) => (
+          <div key={qi} style={{ marginBottom: 32 }}>
+            <div style={{ fontFamily: "var(--t-heading-font)", fontSize: 18, fontWeight: 700, color: "var(--t-text)", lineHeight: 1.35, marginBottom: 12 }}>
+              {qi + 1}.&nbsp;{q.q}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {q.options.map((opt, oi) => {
+                const isSel = selected[qi] === oi;
+                const isRight = oi === q.answer;
+                let bg = "transparent", border = "var(--t-accent)", color = "var(--t-text)", fw = 400;
+                if (submitted) {
+                  if (isRight)   { bg = "#1e5e3e"; border = "#1e5e3e"; color = "#fff"; fw = 700; }
+                  else if (isSel){ bg = "#8b1a1a"; border = "#8b1a1a"; color = "#fff"; fw = 700; }
+                  else           { border = "var(--t-muted)"; color = "var(--t-muted)"; }
+                } else if (isSel) {
+                  bg = "var(--t-accent)"; color = "var(--t-on-accent)"; fw = 700;
+                }
+                return (
+                  <button key={oi} onClick={() => pick(qi, oi)} style={{ background: bg, border: `2px solid ${border}`, color, fontWeight: fw, fontFamily: "var(--t-font)", fontSize: 14, padding: "10px 14px", textAlign: "left", cursor: submitted ? "default" : "pointer", lineHeight: 1.35, transition: "all 0.2s" }}>
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {submitted && (
+              <div style={{ marginTop: 8, fontFamily: "var(--t-font)", fontSize: 13, color: "#1e5e3e", fontStyle: "italic" }}>
+                ✓ {q.explain}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {!submitted ? (
+          <button onClick={() => setSubmitted(true)} disabled={!allAnswered} style={{ background: allAnswered ? "var(--t-danger)" : "transparent", border: "2px solid var(--t-danger)", color: allAnswered ? "var(--t-text-light)" : "var(--t-muted)", fontFamily: "var(--t-font)", fontSize: 13, letterSpacing: "0.15em", fontWeight: 700, padding: "12px 28px", cursor: allAnswered ? "pointer" : "default", transition: "all 0.2s" }}>
+            CHECK ANSWERS
+          </button>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+            <div style={{ fontFamily: "var(--t-heading-font)", fontSize: 28, fontWeight: 900, color: scoreColor }}>
+              {score} / {questions.length}
+              <span style={{ fontFamily: "var(--t-font)", fontSize: 14, fontWeight: 400, color: "var(--t-muted)", marginLeft: 10 }}>
+                {score === questions.length ? "Perfect!" : score === 1 ? "Nearly there" : "Keep reviewing"}
+              </span>
+            </div>
+            <button onClick={reset} style={{ background: "transparent", border: "2px solid var(--t-accent)", color: "var(--t-accent)", fontFamily: "var(--t-font)", fontSize: 12, letterSpacing: "0.15em", fontWeight: 700, padding: "10px 20px", cursor: "pointer", display: "flex", alignItems: "center", gap: 6 }}>
+              <RotateCcw size={13} /> TRY AGAIN
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
