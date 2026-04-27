@@ -121,6 +121,15 @@ export default function App() {
     {
       id: 8,
       year: "1914",
+      title: "Quick Check",
+      subtitle: "Three questions on what you've seen so far",
+      script: "Pause here before moving on. Three questions covering the causes and outbreak of war. Ask students to answer individually, then discuss. Green = correct, red = wrong.",
+      exam: "Tests: declaration sequence (Jul 28), Belgium's role triggering Britain, Black Hand organisation. All standard ICSE exam material.",
+      Component: StopCascadeQuiz,
+    },
+    {
+      id: 9,
+      year: "1914",
       title: "Two Fronts Open",
       subtitle: "Germany fights east and west at once",
       script: "Germany's nightmare: war on two fronts. In the West, they sweep through Belgium toward Paris — stopped at the Battle of the Marne, 15 miles short. In the East, Russia attacks. The 'short war' everyone expected is already gone.",
@@ -128,7 +137,7 @@ export default function App() {
       Component: StopFronts,
     },
     {
-      id: 9,
+      id: 10,
       year: "1914–1918",
       title: "Life in the Trenches",
       subtitle: "Total war, total misery",
@@ -137,7 +146,7 @@ export default function App() {
       Component: StopTrenches,
     },
     {
-      id: 10,
+      id: 11,
       year: "1917",
       title: "USA Enters, Russia Exits",
       subtitle: "The war's hinge year",
@@ -146,7 +155,7 @@ export default function App() {
       Component: StopUSARussia,
     },
     {
-      id: 11,
+      id: 12,
       year: "June 28, 1919",
       title: "The Treaty of Versailles",
       subtitle: "Eleven clauses to crush a nation",
@@ -155,7 +164,7 @@ export default function App() {
       Component: StopVersailles,
     },
     {
-      id: 12,
+      id: 13,
       year: "1919–1920",
       title: "A Map Redrawn, A League Born",
       subtitle: "Three empires fall, new nations rise",
@@ -210,7 +219,7 @@ export default function App() {
 
       {/* Title bar for current stop */}
       <div style={styles.stopHeader}>
-        <div style={styles.stopNumber}>STOP {String(current.id).padStart(2, "0")} / 12</div>
+        <div style={styles.stopNumber}>STOP {String(current.id).padStart(2, "0")} / {stops.length}</div>
         <h2 style={styles.stopTitle}>{current.title}</h2>
         <div style={styles.stopSubtitle}>{current.subtitle}</div>
       </div>
@@ -1029,6 +1038,155 @@ function StopCascade() {
             </button>
           </div>
         </div>
+      </div>
+    </div>
+  );
+}
+
+function StopCascadeQuiz() {
+  const questions = [
+    {
+      q: "On what date did Austria-Hungary officially declare war on Serbia, starting the cascade?",
+      options: ["June 28, 1914", "July 23, 1914", "July 28, 1914", "August 1, 1914"],
+      answer: 2,
+      explain: "July 28, 1914 — exactly one month after the Sarajevo assassination.",
+    },
+    {
+      q: "Germany's invasion of which neutral country caused Britain to enter the war on 4 August 1914?",
+      options: ["France", "Serbia", "Belgium", "Russia"],
+      answer: 2,
+      explain: "Belgium — Britain had guaranteed Belgian neutrality in the 1839 Treaty of London.",
+    },
+    {
+      q: "Which secret organisation was behind the assassination of Archduke Franz Ferdinand?",
+      options: ["Triple Alliance", "Triple Entente", "Bolsheviks", "Black Hand"],
+      answer: 3,
+      explain: "The Black Hand (Union of Death) — an extremist Serbian nationalist group.",
+    },
+  ];
+
+  const [selected, setSelected] = useState(Array(questions.length).fill(null));
+  const [submitted, setSubmitted] = useState(false);
+
+  const allAnswered = selected.every((s) => s !== null);
+  const score = submitted ? selected.filter((s, i) => s === questions[i].answer).length : 0;
+
+  const pick = (qi, oi) => {
+    if (submitted) return;
+    setSelected((prev) => prev.map((v, i) => (i === qi ? oi : v)));
+  };
+
+  const reset = () => {
+    setSelected(Array(questions.length).fill(null));
+    setSubmitted(false);
+  };
+
+  const scoreColor = score === questions.length ? "#1e5e3e" : score >= 2 ? "#a16207" : "#8b1a1a";
+
+  return (
+    <div style={{ ...stageStyles.wrap, overflowY: "auto" }}>
+      <div style={{ maxWidth: 740, margin: "0 auto", padding: "28px 20px", width: "100%" }}>
+
+        <div style={{ fontFamily: "var(--t-font)", fontSize: 11, letterSpacing: "0.25em", color: "var(--t-accent)", fontWeight: 700, marginBottom: 24 }}>
+          CHECKPOINT · SLIDES 1 – 7
+        </div>
+
+        {questions.map((q, qi) => (
+          <div key={qi} style={{ marginBottom: 32 }}>
+            <div style={{ fontFamily: "var(--t-heading-font)", fontSize: 18, fontWeight: 700, color: "var(--t-text)", lineHeight: 1.35, marginBottom: 12 }}>
+              {qi + 1}.&nbsp;{q.q}
+            </div>
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 8 }}>
+              {q.options.map((opt, oi) => {
+                const isSel = selected[qi] === oi;
+                const isRight = oi === q.answer;
+                let bg = "transparent", border = "var(--t-accent)", color = "var(--t-text)", fw = 400;
+                if (submitted) {
+                  if (isRight)            { bg = "#1e5e3e"; border = "#1e5e3e"; color = "#fff"; fw = 700; }
+                  else if (isSel)         { bg = "#8b1a1a"; border = "#8b1a1a"; color = "#fff"; fw = 700; }
+                  else                    { border = "var(--t-muted)"; color = "var(--t-muted)"; }
+                } else if (isSel) {
+                  bg = "var(--t-accent)"; color = "var(--t-on-accent)"; fw = 700;
+                }
+                return (
+                  <button
+                    key={oi}
+                    onClick={() => pick(qi, oi)}
+                    style={{
+                      background: bg,
+                      border: `2px solid ${border}`,
+                      color,
+                      fontWeight: fw,
+                      fontFamily: "var(--t-font)",
+                      fontSize: 14,
+                      padding: "10px 14px",
+                      textAlign: "left",
+                      cursor: submitted ? "default" : "pointer",
+                      lineHeight: 1.35,
+                      transition: "all 0.2s",
+                    }}
+                  >
+                    {opt}
+                  </button>
+                );
+              })}
+            </div>
+            {submitted && (
+              <div style={{ marginTop: 8, fontFamily: "var(--t-font)", fontSize: 13, color: "#1e5e3e", fontStyle: "italic" }}>
+                ✓ {q.explain}
+              </div>
+            )}
+          </div>
+        ))}
+
+        {!submitted ? (
+          <button
+            onClick={() => setSubmitted(true)}
+            disabled={!allAnswered}
+            style={{
+              background: allAnswered ? "var(--t-danger)" : "transparent",
+              border: "2px solid var(--t-danger)",
+              color: allAnswered ? "var(--t-text-light)" : "var(--t-muted)",
+              fontFamily: "var(--t-font)",
+              fontSize: 13,
+              letterSpacing: "0.15em",
+              fontWeight: 700,
+              padding: "12px 28px",
+              cursor: allAnswered ? "pointer" : "default",
+              transition: "all 0.2s",
+            }}
+          >
+            CHECK ANSWERS
+          </button>
+        ) : (
+          <div style={{ display: "flex", alignItems: "center", gap: 24, flexWrap: "wrap" }}>
+            <div style={{ fontFamily: "var(--t-heading-font)", fontSize: 28, fontWeight: 900, color: scoreColor }}>
+              {score} / {questions.length}
+              <span style={{ fontFamily: "var(--t-font)", fontSize: 14, fontWeight: 400, color: "var(--t-muted)", marginLeft: 10 }}>
+                {score === questions.length ? "Perfect!" : score >= 2 ? "Well done" : "Keep reviewing"}
+              </span>
+            </div>
+            <button
+              onClick={reset}
+              style={{
+                background: "transparent",
+                border: "2px solid var(--t-accent)",
+                color: "var(--t-accent)",
+                fontFamily: "var(--t-font)",
+                fontSize: 12,
+                letterSpacing: "0.15em",
+                fontWeight: 700,
+                padding: "10px 20px",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                gap: 6,
+              }}
+            >
+              <RotateCcw size={13} /> TRY AGAIN
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
